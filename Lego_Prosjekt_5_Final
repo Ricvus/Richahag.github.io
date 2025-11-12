@@ -1,0 +1,40 @@
+#!/usr/bin/env pybricks-micropython
+from pybricks.hubs import EV3Brick
+from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
+                                 InfraredSensor, UltrasonicSensor, GyroSensor)
+from pybricks.parameters import Port, Stop, Direction, Button, Color
+from pybricks.tools import wait, StopWatch, DataLog
+from pybricks.robotics import DriveBase
+from pybricks.media.ev3dev import SoundFile, ImageFile
+
+
+# This program requires LEGO EV3 MicroPython v2.0 or higher.
+# Click "Open user guide" on the EV3 extension tab for more information.
+
+
+# Create your objects here.
+ev3 = EV3Brick()
+
+
+# Write your program here.
+ev3.speaker.say("Watering time")
+left_motor = Motor(Port.A)
+right_motor = Motor(Port.D)
+Vanner = Motor(Port.C)
+obstacle_sensor = UltrasonicSensor(Port.S1)
+robot = DriveBase(left_motor, right_motor, 25, 40)
+fart = 30
+active = True
+
+while active:
+    robot.drive(fart,0)
+
+    if obstacle_sensor.distance() < 130: #Når ultralydsensoren oppfater en hindring, skal den stoppe opp.
+        robot.stop()
+        wait(7000)
+        Vanner.run_angle(20, 60, Stop.HOLD, False) #tømmer vann 60 grader nedover. Motoren skal holde seg der.
+        wait(5000)
+        Vanner.run_angle(20, -60, Stop.HOLD, False) #vannkotaineren returnerer til orginal posisjonen.
+        active = False #stopper programmet.
+        
+        
